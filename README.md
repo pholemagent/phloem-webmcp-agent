@@ -119,3 +119,26 @@ Sandbox vs live:
 | Tool names | identical | identical |
 
 Prompts written against the sandbox therefore port to live mode unchanged.
+
+### Live client
+
+The package ships a dependency-free MCP Streamable HTTP client for that server:
+
+```ts
+import { PhloemLiveClient, LIVE_ENGINEERING_TOOLS, LIVE_TOOL_RISK } from "phloem-webmcp-agent";
+
+const client = new PhloemLiveClient({ accessToken }); // OAuth 2.1 token for the signed-in user
+await client.initialize();
+
+const tools = await client.listTools();
+const status = await client.callTool("phloem_get_project_status", {});
+```
+
+Discovery for the OAuth flow:
+
+```ts
+import { discoverPhloemAuth } from "phloem-webmcp-agent";
+const metadata = await discoverPhloemAuth(); // /.well-known/oauth-protected-resource
+```
+
+`LIVE_ENGINEERING_TOOLS` lists the live tool names and `LIVE_TOOL_RISK` the risk level each one carries; `CRITICAL` names are present so an agent can recognise them, but the server always refuses them.

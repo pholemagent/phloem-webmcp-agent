@@ -88,3 +88,7 @@ Exports: `seedDemoState`, `getDemoState`, `setDemoState`, `updateDemoState`, `re
 ## License
 
 MIT — see [LICENSE](./LICENSE).
+
+## Roadmap
+
+This package is the sandbox surface today. See [ROADMAP.md](./ROADMAP.md) for what remains before an agent executes real work in a live Phloem workspace.

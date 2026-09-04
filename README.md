@@ -89,6 +89,33 @@ Exports: `seedDemoState`, `getDemoState`, `setDemoState`, `updateDemoState`, `re
 
 MIT — see [LICENSE](./LICENSE).
 
-## Roadmap
+## Live mode — real work in a Phloem workspace
 
-This package is the sandbox surface today. See [ROADMAP.md](./ROADMAP.md) for what remains before an agent executes real work in a live Phloem workspace.
+The same tool names run against a real Phloem workspace over the OAuth 2.1–secured MCP server:
+
+```
+https://pholem.com/mcp
+```
+
+Connect any MCP-capable agent to that URL and complete the OAuth sign-in. From then on the agent acts **as the signed-in user**: every call runs under row-level security, resolves the caller's workspace and role, honours per-workspace tool enable/disable and minimum-role policies, and writes an audit row.
+
+The governance model is identical to the sandbox, enforced server-side:
+
+| Guard | Live behaviour |
+| --- | --- |
+| Role | `mcp_tool_policies` per workspace; below the minimum role → `INSUFFICIENT_ROLE` |
+| Risk | `CRITICAL` tools (`phloem_approve_release`, `phloem_delete_project`, `phloem_get_repository_credentials`) are always refused → `RISK_BLOCKED` / `SECRET_ACCESS_DENIED` |
+| Budget | `phloem_run_task` / `phloem_run_tests` check the project budget account → `BUDGET_LIMIT` |
+| Approval | `phloem_deploy_release` files a pending human approval instead of acting → `APPROVAL_REQUIRED` |
+| Audit | Every call — allowed, denied or failed — is recorded with actor, tool, decision and duration |
+
+Sandbox vs live:
+
+| | Sandbox (`registerDemoTools`) | Live (`https://pholem.com/mcp`) |
+| --- | --- | --- |
+| Auth | none | OAuth 2.1, anonymous calls rejected with `401` |
+| State | `localStorage` | Phloem database, RLS-scoped |
+| Effects | simulated | real tasks, agent runs, test runs, deploy records |
+| Tool names | identical | identical |
+
+Prompts written against the sandbox therefore port to live mode unchanged.

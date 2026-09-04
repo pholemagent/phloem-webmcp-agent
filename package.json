@@ -1,6 +1,6 @@
 {
   "name": "phloem-webmcp-agent",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Open-source MVP WebMCP agent surface for Phloem: governed browser-agent tools with risk classification, budget guard and human-approval boundary.",
   "license": "MIT",
   "type": "module",
